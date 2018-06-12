@@ -11,6 +11,11 @@ unit_test_exe := $(basename $(unit_test_src))
 
 all-tests: $(unit_test_exe)
 
+
 $(unit_test_exe) : %:%.cc $(tests_utils_src)
+	mkdir bin
 	@echo $@ $^
-	$(CXX) $(CXXFLAGS) $^ -o $@ $(LDFlags)
+	$(CXX) $(CXXFLAGS) $^ -o bin/$@ $(LDFlags)
+
+clean:
+	rm -rf bin

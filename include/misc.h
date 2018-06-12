@@ -4,7 +4,7 @@
 #define DEF_NS_HEAD_QUARK  namespace quark {
 #define DEF_NS_TAIL_QUARK  } //namespace quark
 
-
+#include <string>
 #include <stdint.h>
 
 DEF_NS_HEAD_QUARK
@@ -23,8 +23,8 @@ namespace misc {
     static_assert(Cond, c_string); \
 } while(0)
 #else
-#define quark_assert_static(c, not_used) do { \
-    enum {assert__ = 1/(c)}; \
+#define quark_assert_static(Cond, not_used) do { \
+    enum {assert__ = 1/(Cond)}; \
 } while(0)
 #endif
 
@@ -62,8 +62,30 @@ namespace misc {
     void check_type_equal(T1, T2) {
         quark_assert_static((is_same_type<T1, T2>::value), "type not equal!");
     }
+    
+    template <typename T1, typename T2>
+    void check_type_equal(T2) {
+        quark_assert_static((is_same_type<T1, T2>::value), "type not equal!");
+    }
+    
+    template <typename T1, typename T2>
+    void check_type_equal() {
+        quark_assert_static((is_same_type<T1, T2>::value), "type not equal!");
+    }
+    
+    template <typename T>
+    void check_type_string(const T&) {
+        check_type_equal<T, std::string>();
+    }
+
+#define CheckTypeTgt(Vars, Type) do { \
+}while(0)
+
 } // namespace misc
 
+namespace time {
+
+} // namespace time 
 
 namespace numberic {
 
@@ -111,8 +133,6 @@ template <typename T>
 bool IsMax(const T var) {
     return var == MaxValue(var);
 }
-
-
 
 } // namespace numberic
 

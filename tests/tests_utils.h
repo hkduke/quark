@@ -12,8 +12,12 @@ namespace Tests {
     struct TObject {
         TestHandler fp;
         const char *name;
+        int res;
         TObject(TestHandler fp_, const char *n_) :
             fp(fp_), name(n_) { }
+        const char * Result() {
+            return res == 0 ? "Pass  " : "Failed";
+        }
 
     };
 
@@ -28,10 +32,13 @@ namespace Tests {
     };
 
 
-#define ADD_Test(TS, FP) do {   \
-                                \
-}while(0)
-
+extern void TsAddTests(TestSet *ts, ...);
+#define TESTSMAIN(...) int main() {    \
+    quark::Tests::TestSet *ts = new quark::Tests::TestSet();    \
+    quark::Tests::TsAddTests(ts, __VA_ARGS__);    \
+    ts->Run();                      \
+    return 0;                       \
+}
 
 } // namespace Tests
 

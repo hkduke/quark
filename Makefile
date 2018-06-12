@@ -28,6 +28,9 @@ env:
 		
 	
 
-.PHONY: tests
+.PHONY: tests clean
 tests: env
 	make all-tests -C $@ gRootConf=$(gRootConf)
+
+clean:
+	make -C tests clean

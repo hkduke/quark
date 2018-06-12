@@ -1,4 +1,6 @@
+#include <misc.h>
 #include <cstdio>
+#include <stdarg.h>
 
 #include "tests_utils.h"
 
@@ -14,9 +16,9 @@ namespace Tests {
         int idx = 0;
         for( itr i = tests_.begin(); i != tests_.end(); ++i, ++idx) {
             if (*i) {
-                printf("---- test %d: %s -----\n", idx, (*i)->name);
-                int ret = (*i)->fp();
-                printf("---- res : %d  -----\n", ret);
+                printf("---- test #%d: [%s] -----\n", idx, (*i)->name);
+                (*i)->res = (*i)->fp();
+                printf("---- test #%d: %s -----\n", idx, (*i)->Result());
             }
         }   
     }
@@ -27,6 +29,25 @@ namespace Tests {
             }
         }
     }
-}
+
+
+    void TsAddTests(TestSet *ts, ...) {
+        TestHandler th;
+        const char* name;
+        
+        va_list vl;
+        va_start(vl, ts);
+        th = va_arg(vl, TestHandler);
+        while(th != NULL) {
+            name = va_arg(vl, const char*);
+            ts->AddTest(th, name);
+            th = va_arg(vl, TestHandler);
+        }
+    }
+
+
+} // namespace Tests
+
+
 DEF_NS_TAIL_QUARK
 
