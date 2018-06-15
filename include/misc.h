@@ -4,8 +4,13 @@
 #define DEF_NS_HEAD_QUARK  namespace quark {
 #define DEF_NS_TAIL_QUARK  } //namespace quark
 
+
 #include <string>
+#include <cstring>
 #include <stdint.h>
+
+#include <time.h> // time_t, struct tm, time, localtime
+
 
 DEF_NS_HEAD_QUARK
 
@@ -78,14 +83,88 @@ namespace misc {
         check_type_equal<T, std::string>();
     }
 
-#define CheckTypeTgt(Vars, Type) do { \
-}while(0)
+    template<typename T>
+    T min(const T & a, const T & b) {
+        return a < b ? a : b;
+    }
+        
+    template<typename T>
+    T max(const T & a, const T & b) {
+        return a > b ? a : b;
+    }
 
 } // namespace misc
 
-namespace time {
 
-} // namespace time 
+
+/*
+ * quark string implementation
+ * 
+ */
+namespace slice {
+    class slice {
+    public:
+        slice(void *memptr, size_t sz) : data_(reinterpret_cast<const char*>(memptr)),
+            len_(sz) { }
+        slice(const std::string & s) : data_(s.data()),
+            len_(s.length()) { }
+        slice(const char *sptr, size_t sz) : data_(sptr), len_(sz) { }
+        slice(const char *c_sptr) : data_(c_sptr), len_(strlen(c_sptr)) { }
+    
+
+        inline std::string ToString() {
+            return std::string(data_, len_);
+        }
+        inline const char* Data() const { return data_; }
+        inline size_t Size() const { return len_; }
+
+        /// [in]  Param 
+        /// 
+        /// [out] Return
+        ///  >0 - this > s_
+        ///  0  - this == s_
+        ///  <0 - this < s_
+        //   Note - if one is another's substring, longer one is larger than the other.
+        //
+        inline int Compare(const slice & s_) {
+            size_t sz = misc::min(len_, s_.Size());
+            int ret = ::memcmp(data_, s_.Data(), sz);
+            if(0 == ret){
+                ret = len_ < s_.len_ ? -1 : 0;
+                ret = len_ > s_.len_ ? +1 : 0;
+            }
+            return ret;
+        }
+        
+        slice & operator=(const slice & s_) {
+            data_ = s_.data_;
+            len_  = s_.len_;
+            return *this;
+        }
+        
+    private:
+        const char* data_;
+        size_t len_;
+    };
+    /// Info  - xxxxx  --> [xxxxxx]
+    /// Param - 
+    ///   [in] p - the quoted char, char [ < ( { # and space are supported.
+    ///
+    inline std::string AddQuote(std::string &o, char p = '[') {
+        const char *q;
+        switch (p) {
+            case '[': q = "]"; break;
+            case '<': q = ">"; break;
+            case '(': q = ")"; break;
+            case '{': q = "}"; break;
+            case '#': q = "#"; break;
+            case ' ': q = " "; break;
+        };
+
+        o = std::string(p, 1) + o + q;
+        return o;
+    }
+} // namespace slice
 
 namespace numberic {
 
@@ -136,6 +215,44 @@ bool IsMax(const T var) {
 
 } // namespace numberic
 
+namespace time {
+    using numberic::u64;
+    using slice::slice;
+
+    class timestamp {
+    public:
+        enum {
+            format_0            /// "2018-04-18 16:08:05.xxxxxx"
+        };
+        enum {
+            resol_milisec,      /// resolution: milisecond  ms
+            resol_usec          /// resolution: microsecond μs
+        };
+        timestamp(u64);
+        timestamp(bool precise = false, int resol = resol_milisec);
+
+        
+        std::string ToString(int format = format_0);
+        void  decode(u64);
+        u64   encode();
+    private:
+        union encoded {
+            struct e1 {
+                u64 resol_ : 2;
+                u64 unused : 14;
+                u64 val    : 48;
+            } bfm;     /// bit field member
+            u64 line;  /// whole value
+        };
+
+        u64   _raw_to_u64();
+        void  _u64_to_raw(u64);
+        
+
+        struct timespec raw_;   /// timespec 
+        int resol_;             /// resolution FIXME - global? make it static?
+    };
+} // namespace time 
 
 DEF_NS_TAIL_QUARK
 
