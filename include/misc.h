@@ -92,7 +92,7 @@ namespace misc {
     T max(const T & a, const T & b) {
         return a > b ? a : b;
     }
-
+    typedef unsigned char uchar;
 } // namespace misc
 
 
@@ -217,7 +217,6 @@ bool IsMax(const T var) {
 
 namespace time {
     using numberic::u64;
-    using slice::slice;
 
     class timestamp {
     public:
@@ -232,11 +231,11 @@ namespace time {
         timestamp(bool precise = false, int resol = resol_milisec);
 
         
-        std::string ToString(int format = format_0);
+        std::string ToString(int fm = format_0);
         void  decode(u64);
         u64   encode();
     private:
-        union encoded {
+        union encoded {       /// FIXME - de/encode generic impl
             struct e1 {
                 u64 resol_ : 2;
                 u64 unused : 14;
@@ -251,7 +250,9 @@ namespace time {
 
         struct timespec raw_;   /// timespec 
         int resol_;             /// resolution FIXME - global? make it static?
-    };
+    }; // class timestamp
+
+
 } // namespace time 
 
 DEF_NS_TAIL_QUARK

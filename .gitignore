@@ -1,1 +1,4 @@
 *.config
+*.o
+*.a
+*.swp

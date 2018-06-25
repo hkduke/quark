@@ -1,3 +1,4 @@
+#include <cstdio>
 #include <misc.h>
 
 DEF_NS_HEAD_QUARK
@@ -11,8 +12,12 @@ namespace time {
 #else
 #define QUARK_TIMESTAMP_CLOCK CLOCK_REALTIME
 #endif
+
 #define QUARK_TIMESTAMP_VALID_BITS 48
-#define QUARK_TIMESTAMP_BUFFER_SIZE 64
+#define QUARK_TIMESTAMP_BUFFER_SIZE 28
+
+#define TIME_GET_YEAR(x) (x+1900)
+#define TIME_GET_MONTH(x) (x+1)
 
     timestamp::timestamp(bool precise, int resol) : raw_(::timespec{0, 0}), resol_(resol) {
         if (!precise) { 
@@ -22,7 +27,7 @@ namespace time {
         }
     }
     
-    void timestamp::decode(u64 ux) {
+    void timestamp::decode(u64 ux) {  /// FIXME - de/encode generic impl
         encoded x;
         x.line = ux;
         this->_u64_to_raw(x.bfm.val);
@@ -63,8 +68,13 @@ namespace time {
         ti = ::localtime(&(raw_.tv_sec));
         if (fm == format_0) {
             ret.resize(QUARK_TIMESTAMP_BUFFER_SIZE);
-            snprintf
+            ::snprintf( const_cast<char*>(ret.data()), QUARK_TIMESTAMP_BUFFER_SIZE,   /// if exceeds this length, the string would be truncated.
+                    "%d-%d-%d %d:%d:%d.%ld", 
+                    TIME_GET_YEAR(ti->tm_year), TIME_GET_MONTH(ti->tm_mon), ti->tm_mday,
+                    ti->tm_hour, ti->tm_min, ti->tm_sec, raw_.tv_nsec);
+                    
         }
+        return ret; // copy
     }
 
 } // namespace time

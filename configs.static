@@ -1,0 +1,5 @@
+InfoPrefix="\\033[32m" #green
+WarnPrefix="\\033[33m" #yellow
+ErrPrefix="\\033[31m"  #red
+Suffix="\\033[0m"     
+

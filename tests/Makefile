@@ -1,7 +1,7 @@
 include $(gRootConf)
 TestsInc := ./
 
-LDFlags := $(CoreLDFlags)
+LDFlags := $(CoreLDFlags) $(RootLDFlags)
 CXXFLAGS :=$(CoreCXXFlags) -I$(RootInc) -I$(TestsInc)
 
 tests_utils_src := tests_utils.cc
