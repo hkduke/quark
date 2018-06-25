@@ -5,7 +5,7 @@ include $(gRootConf)
 
 
 LDFlags  := $(CoreLDFlags)
-CXXFlags := $(CoreCXXFlags) -I$(RootInc)
+CXXFlags := $(CoreCXXFlags) -I$(RootInc) $(DebugFlag)
 
 
 srcs := $(wildcard *.cc)
@@ -14,7 +14,7 @@ tgts := $(patsubst %.cc, %.o, $(srcs))
 core-lib-static := lib$(CoreLibName).a
 
 $(core-lib-static): $(tgts)
-	@echo "$(InfoPrefix)- packing:$(Suffix)  $@"
+	@echo "$(InfoPrefix)- packing:$(Suffix) $@"
 	$(AR) cr $@ $^
 	$(RANLIB) $@
 

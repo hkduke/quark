@@ -23,7 +23,7 @@ CoreLibName := $(project_name)
 CoreCXXFlags := -std=c++11
 CoreLDFlags := -lpthread
 RootInc := $(gRootPath)/include
-
+Debug := "-DDEBUG"
 
 gConfInput-Static := $(gRootPath)/configs.static
 gRootConf := $(gRootPath)/$(project_name).config
@@ -47,15 +47,15 @@ env:
 		CoreCXXFlags=$(CoreCXXFlags) \
 		RootInc=$(RootInc) \
 		AR=$(AR) RANLIB=$(RANLIB) \
-		USECoreLibLDFlags="-L$(CorePath),-l$(CoreLibName)"
-
+		USECoreLibLDFlags="-L$(CorePath),-l$(CoreLibName),$(Debug)" \
+		DebugFlag="$(Debug)"
 		
 quark: env
 	make -C $(CorePath) gRootConf=$(gRootConf)
 
 
 .PHONY: tests clean
-tests: env
+tests: env quark
 	make all-tests -C $(gTestsPath) gRootConf=$(gRootConf)
 
 clean:

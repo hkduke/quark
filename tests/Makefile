@@ -1,8 +1,8 @@
 include $(gRootConf)
 TestsInc := ./
 
-LDFlags := $(CoreLDFlags) $(RootLDFlags)
-CXXFLAGS :=$(CoreCXXFlags) -I$(RootInc) -I$(TestsInc)
+LDFlags := $(CoreLDFlags) $(RootLDFlags) $(USECoreLibLDFlags)
+CXXFLAGS :=$(CoreCXXFlags) -I$(RootInc) -I$(TestsInc) $(DebugFlag)
 
 tests_utils_src := tests_utils.cc
 
@@ -13,6 +13,10 @@ all-tests: $(unit_test_exe)
 
 
 $(unit_test_exe) : %:%.cc $(tests_utils_src)
+	if [ -d bin ]; then \
+		rm -rf bin;\
+	fi
+
 	mkdir bin
 	@echo $@ $^
 	$(CXX) $(CXXFLAGS) $^ -o bin/$@ $(LDFlags)

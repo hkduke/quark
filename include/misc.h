@@ -23,6 +23,9 @@ DEF_NS_HEAD_QUARK
  */
 namespace misc {
 
+
+///assertion
+#if defined (DEBUG)
 #if __cplusplus >= 201103L
 #define quark_assert_static(Cond, c_string) do { \
     static_assert(Cond, c_string); \
@@ -32,6 +35,11 @@ namespace misc {
     enum {assert__ = 1/(Cond)}; \
 } while(0)
 #endif
+#else
+#define quark_assert_static(NU1,NU2)  
+#endif
+
+
 
 #if __cplusplus >= 201103L
     template <typename T, T Val>
@@ -93,6 +101,9 @@ namespace misc {
         return a > b ? a : b;
     }
     typedef unsigned char uchar;
+
+    
+
 } // namespace misc
 
 
@@ -110,10 +121,10 @@ namespace slice {
             len_(s.length()) { }
         slice(const char *sptr, size_t sz) : data_(sptr), len_(sz) { }
         slice(const char *c_sptr) : data_(c_sptr), len_(strlen(c_sptr)) { }
-    
+        slice() : data_(""), len_(0) { }  
 
         inline std::string ToString() {
-            return std::string(data_, len_);
+            return std::string(data_, len_); //involve a copy operation.
         }
         inline const char* Data() const { return data_; }
         inline size_t Size() const { return len_; }
@@ -150,7 +161,7 @@ namespace slice {
     /// Param - 
     ///   [in] p - the quoted char, char [ < ( { # and space are supported.
     ///
-    inline std::string AddQuote(std::string &o, char p = '[') {
+    inline std::string& AddQuote(std::string &o, char p = '[') {
         const char *q;
         switch (p) {
             case '[': q = "]"; break;
@@ -161,9 +172,22 @@ namespace slice {
             case ' ': q = " "; break;
         };
 
-        o = std::string(p, 1) + o + q;
+        o = std::string(&p, 1) + o + q;
         return o;
     }
+    
+
+    template <typename T>
+    std::string ToString(T s1) {
+        s1->ToString(); //copy
+    }
+
+    template <>
+    inline std::string ToString(bool s1) {
+        return s1 ? 
+            std::string("True") : std::string("False");
+    }
+
 } // namespace slice
 
 namespace numberic {
@@ -173,12 +197,23 @@ typedef uint16_t u16;
 typedef uint32_t u32;
 typedef uint64_t u64;
 
-template <typename T>
+
+
+template <typename T>                   /// FIXME - numberic type_traits, we can use template specilize to do it. no need for calc.
 bool IsSigned(const T) {
     T m_ = 0;
     m_ = ~m_;
     return int64_t(m_) == int64_t(-1);
 }
+
+template<> inline bool IsSigned(int)  { return true; }
+template<> inline bool IsSigned(int64_t)  { return true; }
+
+
+template<> inline bool IsSigned(u8)  { return false; }
+template<> inline bool IsSigned(u16) { return false; }
+template<> inline bool IsSigned(u32) { return false; }
+template<> inline bool IsSigned(u64) { return false; }
 
 template <typename T>
 T MaxValue(const T) {
@@ -191,6 +226,12 @@ T MaxValue(const T) {
     return ret;
 }
 
+template <> inline u32 MaxValue(const u32) { return 0xFFFFFFFFU; }
+template <> inline int32_t MaxValue(const int32_t) { return 0x7FFFFFFF; }
+
+template <> inline u64 MaxValue(const u64) { return 0xFFFFFFFFFFFFFFFFULL; }
+
+
 template <typename T>
 T MinValue(const T) {
     T min_ = 0;
@@ -202,6 +243,9 @@ T MinValue(const T) {
     uint64_t ret = min_ | mask_;
     return ret;
 }
+
+template <> inline u64 MinValue(const u64) { return 0ULL; }
+template <> inline int64_t MinValue(const int64_t) { return 0x8000000000000000LL; }
 
 template <typename T>
 bool IsMin(const T var) {
