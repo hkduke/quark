@@ -14,7 +14,7 @@ namespace time {
 #endif
 
 #define QUARK_TIMESTAMP_VALID_BITS 48
-#define QUARK_TIMESTAMP_BUFFER_SIZE 28
+#define QUARK_TIMESTAMP_BUFFER_SIZE 25
 
 #define TIME_GET_YEAR(x) (x+1900)
 #define TIME_GET_MONTH(x) (x+1)
@@ -30,8 +30,8 @@ namespace time {
     void timestamp::decode(u64 ux) {  /// FIXME - de/encode generic impl
         encoded x;
         x.line = ux;
-        this->_u64_to_raw(x.bfm.val);
         this->resol_ = x.bfm.resol_;
+        this->_u64_to_raw(x.bfm.val << (64 - QUARK_TIMESTAMP_VALID_BITS));
     }
 
     u64 timestamp::encode() {

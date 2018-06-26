@@ -5,8 +5,10 @@ Quark
     - binlog(WAL)
     - master-slave binlog/ m-s + quorum/raft
     - eventual/strongly consistent
-
-
+    - protocol - transaction,consistency,heartbeat,version-control protocol
+    - thread model
+    - i/o model - reactor,preactor,ace
+    - direct i/o - 
 
 - MainRoad
  

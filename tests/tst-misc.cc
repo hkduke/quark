@@ -95,8 +95,25 @@ int tst_04() {
     return 0;
 }
 
+using namespace quark::time;
+int tst_05() {
+    timestamp ts1{};
+    timestamp ts2(true);
+    std::cout << ts1.ToString() << std::endl;
+    std::cout << ts2.ToString() << std::endl;
+    
+    u64 x = ts1.encode();
+    timestamp ts3(x);
+    std::cout << ts3.ToString() << std::endl;
+
+    return 0;
+}
+
+
+
 TESTSMAIN(tst_01, "type_checking",
         tst_02, "slice",
         tst_03, "slice_compare",
         tst_04, "numberic",
+        tst_05, "time",
         NULL)
