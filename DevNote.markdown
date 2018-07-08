@@ -29,6 +29,12 @@ Quark
 --------------------------------
  - logging.
 
+2018.07.01
+--------------------------------
+ - NPTL Thread initial version.
+ - Posix File Abstraction.
+ - 
+
 Test Note
 --------------------------------
 
