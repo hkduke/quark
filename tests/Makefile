@@ -13,13 +13,11 @@ all-tests: $(unit_test_exe)
 
 
 $(unit_test_exe) : %:%.cc $(tests_utils_src)
-	if [ -d bin ]; then \
-		rm -rf bin;\
-	fi
-
-	mkdir bin
 	@echo $@ $^
 	$(CXX) $(CXXFLAGS) $^ -o bin/$@ $(LDFlags)
 
 clean:
-	rm -rf bin
+	if [ -d bin ]; then \
+		rm -rf bin;\
+	fi
+	mkdir bin

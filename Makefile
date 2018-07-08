@@ -17,6 +17,7 @@ CC  := clang
 CXX := clang++
 AR  := ar
 RANLIB := ranlib
+CF  := clang-format
 
 CorePath := $(gRootPath)/src
 CoreLibName := $(project_name)
@@ -53,9 +54,13 @@ env:
 quark: env
 	make -C $(CorePath) gRootConf=$(gRootConf)
 
+code-format:
+	@echo "----formating the code!----"
+	# dummy target now!
 
 .PHONY: tests clean
 tests: env quark
+	make clean -C $(gTestsPath)
 	make all-tests -C $(gTestsPath) gRootConf=$(gRootConf)
 
 clean:
