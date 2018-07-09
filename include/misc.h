@@ -71,16 +71,19 @@ namespace misc {
         //static constexpr bool value = true;
     };
 
+    /// check_type_equal(a, b)  check if a's Type == b's Type
     template <typename T1, typename T2>
     void check_type_equal(T1, T2) {
         quark_assert_static((is_same_type<T1, T2>::value), "type not equal!");
     }
     
+    /// check_type_equal<T>(a)   check if a's Type == T
     template <typename T1, typename T2>
     void check_type_equal(T2) {
         quark_assert_static((is_same_type<T1, T2>::value), "type not equal!");
     }
     
+    /// check_type_equal<T1,T2>()   check if T1 == T2
     template <typename T1, typename T2>
     void check_type_equal() {
         quark_assert_static((is_same_type<T1, T2>::value), "type not equal!");
@@ -197,6 +200,10 @@ typedef uint16_t u16;
 typedef uint32_t u32;
 typedef uint64_t u64;
 
+typedef int8_t  i8;
+typedef int16_t i16;
+typedef int32_t i32;
+typedef int64_t i64;
 
 
 template <typename T>                   /// FIXME - numberic type_traits, we can use template specilize to do it. no need for calc.
@@ -290,7 +297,6 @@ namespace time {
 
         u64   _raw_to_u64();
         void  _u64_to_raw(u64);
-        
 
         struct timespec raw_;   /// timespec 
         int resol_;             /// resolution FIXME - global? make it static?
