@@ -51,12 +51,13 @@ env:
 		USECoreLibLDFlags="-L$(CorePath),-l$(CoreLibName),$(Debug)" \
 		DebugFlag="$(Debug)"
 		
-quark: env
+quark: env code-format
 	make -C $(CorePath) gRootConf=$(gRootConf)
 
 code-format:
 	@echo "----formating the code!----"
-	# dummy target now!
+	find include src -regex ".*\.c*[c|h]" | xargs clang-format -i
+	
 
 .PHONY: tests clean
 tests: env quark
