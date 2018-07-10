@@ -21,8 +21,9 @@ class PosixReadableFile : public File<int, RawByteBuffer> {};
 /// -      void (*) (T*)
 /// - the return value should be mantained by T itself.
 ///
-template <typename T> class nptl_thread : public Thread<T> {
-public:
+template <typename T>
+class nptl_thread : public Thread<T> {
+ public:
   nptl_thread(T *u) : ucontext_(u) {
     int e;
     if (!Error::IsOK(e = pthread_attr_init(&a_))) {
@@ -36,7 +37,7 @@ public:
   virtual void Kill() {}
   virtual int Join() { return _join_fwd(typename T::detachstate()); }
 
-private:
+ private:
   using typename Thread<T>::tag_joinable;
   using typename Thread<T>::tag_detached;
   inline void _init_fwd(tag_joinable) {
@@ -69,15 +70,16 @@ private:
     return NULL;
   }
 
-private:
+ private:
   pthread_t t_;
-  u64 tid_; /// for linux only
+  u64 tid_;  /// for linux only
   pthread_attr_t a_;
 
   T *ucontext_;
 };
 
-template <typename T> int nptl_thread<T>::Run() {
+template <typename T>
+int nptl_thread<T>::Run() {
   int e = pthread_create(&t_, &a_, &nptl_thread<T>::routine, this);
   if (!Error::IsOK(e)) {
     /// log & do something.
@@ -85,15 +87,17 @@ template <typename T> int nptl_thread<T>::Run() {
   }
 }
 
-template <typename T> Thread<T> *Thread<T>::NewThread(T *x) {
+template <typename T>
+Thread<T> *Thread<T>::NewThread(T *x) {
   return new nptl_thread<T>(x);
 }
 
-#if defined(__linux__) && defined(__x86_64__)
+}  // namespace os
 
+#if defined(__linux__) && defined(__x86_64__)
+ #include "syscall_x86_64.h"
 #else
-#error "quark syscall wrapper for gettid(2) only supported in linux(x86_64)."
+ #error "quark syscall wrapper for gettid(2) only supported in linux(x86_64)."
 #endif
 
-} // namespace os
 DEF_NS_TAIL_QUARK

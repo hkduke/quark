@@ -18,7 +18,7 @@ using numberic::i32;
 using numberic::u64;
 
 class Error {
-public:
+ public:
   static inline bool IsOK(int e) { return e == 0; }
   static std::string Msg() { return std::string(strerror(errno)); }
   static std::string Msg(int e) { return std::string(strerror(e)); }
@@ -28,9 +28,9 @@ public:
   }
 };
 
-#define QuarkFatal(Msg, E)                                                     \
-  do {                                                                         \
-    Error::Fatal(Msg, E, __FILE__, __LINE__);                                  \
+#define QuarkFatal(Msg, E)                    \
+  do {                                        \
+    Error::Fatal(Msg, E, __FILE__, __LINE__); \
   } while (0)
 
 /*
@@ -46,9 +46,9 @@ class directory {};
  *  - Random-Access ReadFile
  */
 template <typename HT, typename BT,
-          int PGSIZE = 4096> /// Handler Type, Buffer Type
-class File {                 ///  RedFS File/Normal File
-public:
+          int PGSIZE = 4096>  /// Handler Type, Buffer Type
+class File {                  ///  RedFS File/Normal File
+ public:
   struct meta {
     HT handler_;
 
@@ -59,22 +59,22 @@ public:
   File() {}
   virtual ~File() { Close(); }
 
-  virtual inline HT FetchHandler() const { return m_.handler_; } ///
-  virtual u64 GetCurrOfs() const { return m_.ofs_; }             ///
+  virtual inline HT FetchHandler() const { return m_.handler_; }  ///
+  virtual u64 GetCurrOfs() const { return m_.ofs_; }              ///
   virtual u64 Size() const = 0;
 
-  virtual i32 Append(const BT *bptr, int sz = PGSIZE) = 0; ///
+  virtual i32 Append(const BT *bptr, int sz = PGSIZE) = 0;  ///
   virtual i32 Read(BT *bptr,
-                   int sz = PGSIZE) = 0; /// Read a page from current offset.
+                   int sz = PGSIZE) = 0;  /// Read a page from current offset.
 
-  virtual int Close() = 0; ///
+  virtual int Close() = 0;  ///
   virtual int Sync() = 0;
-  virtual int SetCurrOfs(u64 ofs) = 0; /// only PGSIZE-alignment ofs accepted.
+  virtual int SetCurrOfs(u64 ofs) = 0;  /// only PGSIZE-alignment ofs accepted.
 
-protected:
+ protected:
   struct meta m_;
 
-protected:
+ protected:
   inline void mput() { m_.ref_--; }
   inline File<HT, BT, PGSIZE> *mget() {
     m_.ref_++;
@@ -82,12 +82,12 @@ protected:
   }
 };
 
-template <typename T> /// Thread Object - User Define. Should include a field
-                      /// WorkLoop
-                      class Thread { ///
-public:
+template <typename T>  /// Thread Object - User Define. Should include a field
+                       /// WorkLoop
+class Thread {  ///
+ public:
   typedef struct {
-  } tag_joinable; /// <--- if has this tag, then the thread can be join
+  } tag_joinable;  /// <--- if has this tag, then the thread can be join
   typedef struct {
   } tag_detached;
   struct jthread {
@@ -97,9 +97,9 @@ public:
     typedef tag_detached detachstate;
   };
   enum { Stopped, Running, Blocked };
-  struct ThreadHandler { /// Thread Local Data
+  struct ThreadHandler {  /// Thread Local Data
     u64 tid;
-    int stat; /// Stopped, Running, Blocked
+    int stat;  /// Stopped, Running, Blocked
   };
   Thread() {}
   virtual ~Thread() {}
@@ -114,35 +114,36 @@ public:
   inline u64 GetTid() { return th_.tid; }
   inline int GetStat() { return th_.stat; }
 
-protected:
+ protected:
   inline void SetTid(u64 i) { th_.tid = i; }
   inline void SetStatStopped() { th_.stat = Stopped; }
   inline void SetStatRunning() { th_.stat = Running; }
   inline void SetStatBlocked() { th_.stat = Blocked; }
 
-protected:
+ protected:
   ThreadHandler th_;
 };
 
-template <typename LockType> class Locker {
-public:
+template <typename LockType>
+class Locker {
+ public:
   Locker(LockType *l1) : l_(l1) { l_->Lock(); }
   ~Locker() { l_->Unlock(); }
 
-private:
+ private:
   LockType *l_;
 };
 
 /*
- * lock_guard, lock, load, acquire, atomic_*_t
+ * rcu, lock_guard, lock, load, acquire, atomic_*_t
  */
-class Sync { /// lock-based sync
-public:
+class Sync {  /// lock-based sync
+ public:
 };
 
-class CASSync { /// cas-based sync
+class CASSync {  /// cas-based sync
 };
 
-} // namespace os
+}  // namespace os
 DEF_NS_TAIL_QUARK
 #endif

@@ -15,10 +15,10 @@ namespace log {
  * FIXME thread-safe
  */
 class logger {
-public:
+ public:
   enum { debug, warn, info, error };
 
-private:
+ private:
   int rotate_size;
   int default_level;
 
@@ -26,7 +26,7 @@ private:
   static FILE *fp_;
 };
 
-} // namespace log
+}  // namespace log
 DEF_NS_TAIL_QUARK
 
 #endif

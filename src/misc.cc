@@ -1,5 +1,5 @@
-#include <cstdio>
 #include <misc.h>
+#include <cstdio>
 
 DEF_NS_HEAD_QUARK
 namespace time {
@@ -26,7 +26,7 @@ timestamp::timestamp(bool precise, int resol)
   }
 }
 
-void timestamp::decode(u64 ux) { /// FIXME - de/encode generic impl
+void timestamp::decode(u64 ux) {  /// FIXME - de/encode generic impl
   encoded x;
   x.line = ux;
   this->resol_ = x.bfm.resol_;
@@ -36,7 +36,7 @@ void timestamp::decode(u64 ux) { /// FIXME - de/encode generic impl
 u64 timestamp::encode() {
   u64 val = this->_raw_to_u64();
   encoded x;
-  x.bfm.resol_ = this->resol_; // 0, 1
+  x.bfm.resol_ = this->resol_;  // 0, 1
   x.bfm.val = val >> (64 - QUARK_TIMESTAMP_VALID_BITS);
   /// FIXME - hardcoded resolution.
   return x.line;
@@ -68,14 +68,14 @@ std::string timestamp::ToString(int fm) {
   if (fm == format_0) {
     ret.resize(QUARK_TIMESTAMP_BUFFER_SIZE);
     ::snprintf(const_cast<char *>(ret.data()),
-               QUARK_TIMESTAMP_BUFFER_SIZE, /// if exceeds this length, the
-                                            /// string would be truncated.
+               QUARK_TIMESTAMP_BUFFER_SIZE,  /// if exceeds this length, the
+                                             /// string would be truncated.
                "%d-%d-%d %d:%d:%d.%ld", TIME_GET_YEAR(ti->tm_year),
                TIME_GET_MONTH(ti->tm_mon), ti->tm_mday, ti->tm_hour, ti->tm_min,
                ti->tm_sec, raw_.tv_nsec);
   }
-  return ret; // copy
+  return ret;  // copy
 }
 
-} // namespace time
+}  // namespace time
 DEF_NS_TAIL_QUARK

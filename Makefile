@@ -56,7 +56,7 @@ quark: env code-format
 
 code-format:
 	@echo "----formating the code!----"
-	find include src -regex ".*\.c*[c|h]" | xargs clang-format -i
+	find include src -regex ".*\.c*[c|h]" | xargs clang-format -i --style=Google
 	
 
 .PHONY: tests clean
