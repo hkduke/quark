@@ -36,7 +36,7 @@ help:
 	@echo "  help  - print this message."
 	@echo "  tests - unit tests"
 	@echo "  quark - core library"
-
+	@echo "  code-format - to format the code as Google Style."
 
 env:
 	./scripts/make-env.sh $(gRootConf) $(gConfInput-Static) \
@@ -51,7 +51,7 @@ env:
 		USECoreLibLDFlags="-L$(CorePath),-l$(CoreLibName),$(Debug)" \
 		DebugFlag="$(Debug)"
 		
-quark: env code-format
+quark: env
 	make -C $(CorePath) gRootConf=$(gRootConf)
 
 code-format:
