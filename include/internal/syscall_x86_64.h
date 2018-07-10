@@ -80,11 +80,7 @@ void makeb8(b8* b, T* x) {
 #define X86_64DefSysCall6(ret, NR, a1, a2, a3, a4, a5, a6) \
   SysCallTemplateX8664(ret, NR, 6, a1, a2, a3, a4, a5, a6)
 
-int DoSysCall(uint64_t SysCallNR) {
-  uint64_t ret;
-  X86_64DefSysCall0(ret, SysCallNR);
-  return (int)ret;
-}
+extern int DoSysCall(uint64_t SysCallNR);
 
 template <typename T1>
 int DoSysCall(uint64_t SysCallNR, T1 a1) {

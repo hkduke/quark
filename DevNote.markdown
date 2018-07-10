@@ -54,3 +54,4 @@ Test Note
 | module | timestamp | note |
 |------|--------|---------------|
 | misc | 180625 | unit_test done|
+| thread/tid | 180710 | unit_test done|

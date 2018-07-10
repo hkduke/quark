@@ -1,3 +1,7 @@
+#ifndef SYS_IMPL_QUARK_H
+#define SYS_IMPL_QUARK_H
+
+
 #include <sys_abs.h>
 
 #include <pthread.h>
@@ -55,8 +59,9 @@ class nptl_thread : public Thread<T> {
     /// Note - retval is not used. we don't need this here.
     int e = pthread_join(t_, NULL);
     if (!Error::IsOK(e)) {
-      return e;
+      /// log & do something.
     }
+    return e;
   }
   inline int _join_fwd(tag_detached) { return 0; }
 
@@ -69,7 +74,7 @@ class nptl_thread : public Thread<T> {
     ctx->SetStatRunning();
 
     T *uc = ctx->ucontext_;
-    T::WorkLoop(uc);
+    uc->WorkLoop(uc);
 
     ctx->SetStatStopped();
     return NULL;
@@ -87,8 +92,8 @@ int nptl_thread<T>::Run() {
   int e = pthread_create(&t_, &a_, &nptl_thread<T>::routine, this);
   if (!Error::IsOK(e)) {
     /// log & do something.
-    return e;
   }
+  return e;
 }
 
 template <typename T>
@@ -99,3 +104,5 @@ Thread<T> *Thread<T>::NewThread(T *x) {
 }  // namespace os
 
 DEF_NS_TAIL_QUARK
+
+#endif

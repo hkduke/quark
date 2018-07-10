@@ -83,7 +83,7 @@ class File {                  ///  RedFS File/Normal File
 };
 /// Template Parameter T 
 ///  - Thread Object which user defined. Should include a field `WorkLoop`
-///  - T::Workloop's prototype
+///  - T::WorkLoop's prototype
 ///  -      void (*) (T*)
 ///  - the return value should be mantained by T itself.
 
@@ -151,4 +151,7 @@ class CASSync {  /// cas-based sync
 
 }  // namespace os
 DEF_NS_TAIL_QUARK
+
+#include "./internal/sys_impl_quark.h"
+
 #endif
