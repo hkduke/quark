@@ -81,10 +81,14 @@ class File {                  ///  RedFS File/Normal File
     return this;
   }
 };
+/// Template Parameter T 
+///  - Thread Object which user defined. Should include a field `WorkLoop`
+///  - T::Workloop's prototype
+///  -      void (*) (T*)
+///  - the return value should be mantained by T itself.
 
-template <typename T>  /// Thread Object - User Define. Should include a field
-                       /// WorkLoop
-class Thread {  ///
+template <typename T>
+class Thread {         
  public:
   typedef struct {
   } tag_joinable;  /// <--- if has this tag, then the thread can be join
@@ -98,18 +102,19 @@ class Thread {  ///
   };
   enum { Stopped, Running, Blocked };
   struct ThreadHandler {  /// Thread Local Data
-    u64 tid;
-    int stat;  /// Stopped, Running, Blocked
+    u64 tid;    /// 
+    int stat;   /// Stopped, Running, [Blocked* not impl.]
+    u64 ts;     /// timestamp when it start.
   };
   Thread() {}
   virtual ~Thread() {}
 
   static Thread<T> *NewThread(T *);
 
-  virtual int Run() = 0;
-  virtual void Block() = 0;
-  virtual void Kill() = 0;
-  virtual int Join() = 0;
+  virtual int  Run() = 0;       /// impl-ed. Start running as a new thread
+  virtual void Block() = 0;     /// n/a
+  virtual void Kill() = 0;      /// n/a
+  virtual int  Join() = 0;      /// impl-ed. Block the calling thread and wait until this thread exit.
 
   inline u64 GetTid() { return th_.tid; }
   inline int GetStat() { return th_.stat; }

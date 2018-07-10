@@ -8,10 +8,7 @@ DEF_NS_HEAD_QUARK
 namespace os {
 /// quark system call wrapper.
 
-int __gettid() {
-    return DoSysCall(SYS_gettid);
-}
+int __gettid() { return DoSysCall(SYS_gettid); }
 
-}
+}  // namespace os
 DEF_NS_TAIL_QUARK
-

@@ -103,12 +103,11 @@ T max(const T &a, const T &b) {
 typedef unsigned char uchar;
 
 template <bool, typename T = void>
-struct enable_if_my {
-};
+struct enable_if_my {};
 
 template <typename T>
 struct enable_if_my<true, T> {
-    typedef T type;
+  typedef T type;
 };
 
 }  // namespace misc

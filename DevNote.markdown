@@ -27,13 +27,26 @@ Quark
 
 2018.06.24
 --------------------------------
- - logging.
+ - logging planning.
 
 2018.07.01
 --------------------------------
  - NPTL Thread initial version.
  - Posix File Abstraction.
  - 
+
+2018.07.10
+--------------------------------
+ - add support for gettid(2) as thread id; add a generic syscall wrapper for x86_64.
+
+
+
+TODO List
+-------------------------------
+ - test for thread
+ - logging module
+
+
 
 Test Note
 --------------------------------

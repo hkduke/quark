@@ -3,7 +3,14 @@
 #include <pthread.h>
 #include <unistd.h>
 
+#if defined(__linux__) && defined(__x86_64__)
+#include "syscall_x86_64.h"
+#else
+#error "quark syscall wrapper for gettid(2) only supported in linux(x86_64)."
+#endif
+
 DEF_NS_HEAD_QUARK
+
 namespace os {
 using misc::uchar;
 struct RawByteBuffer {
@@ -17,9 +24,6 @@ class PosixWritableFile : public File<int, RawByteBuffer> {};
 class PosixReadableFile : public File<int, RawByteBuffer> {};
 
 /// NPTL Thread
-/// - T::Workloop's prototype
-/// -      void (*) (T*)
-/// - the return value should be mantained by T itself.
 ///
 template <typename T>
 class nptl_thread : public Thread<T> {
@@ -60,8 +64,9 @@ class nptl_thread : public Thread<T> {
     /* inside this thread */
 
     nptl_thread<T> *ctx = reinterpret_cast<nptl_thread<T> *>(arg);
+
+    ctx->SetTid(static_cast<u64>(__gettid()));
     ctx->SetStatRunning();
-    ctx->SetTid(static_cast<u64>(ctx->t_));
 
     T *uc = ctx->ucontext_;
     T::WorkLoop(uc);
@@ -72,7 +77,6 @@ class nptl_thread : public Thread<T> {
 
  private:
   pthread_t t_;
-  u64 tid_;  /// for linux only
   pthread_attr_t a_;
 
   T *ucontext_;
@@ -93,11 +97,5 @@ Thread<T> *Thread<T>::NewThread(T *x) {
 }
 
 }  // namespace os
-
-#if defined(__linux__) && defined(__x86_64__)
- #include "syscall_x86_64.h"
-#else
- #error "quark syscall wrapper for gettid(2) only supported in linux(x86_64)."
-#endif
 
 DEF_NS_TAIL_QUARK
