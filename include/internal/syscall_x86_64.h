@@ -86,7 +86,7 @@ template <typename T1>
 int DoSysCall(uint64_t SysCallNR, T1 a1) {
   uint64_t ret;
   b8 x1;
-  makeb48(&x1, &a1);
+  makeb8(&x1, &a1);
   X86_64DefSysCall1(ret, SysCallNR, (x1));
   return (int)ret;
 }
@@ -95,8 +95,8 @@ template <typename T1, typename T2>
 int DoSysCall(uint64_t SysCallNR, T1 a1, T2 a2) {
   uint64_t ret;
   b8 x1, x2;
-  makeb48(&x1, &a1);
-  makeb48(&x2, &a2);
+  makeb8(&x1, &a1);
+  makeb8(&x2, &a2);
   X86_64DefSysCall2(ret, SysCallNR, (x1), (x2));
   return (int)ret;
 }
@@ -105,9 +105,9 @@ template <typename T1, typename T2, typename T3>
 int DoSysCall(uint64_t SysCallNR, T1 a1, T2 a2, T3 a3) {
   uint64_t ret;
   b8 x1, x2, x3;
-  makeb48(&x1, &a1);
-  makeb48(&x2, &a2);
-  makeb48(&x3, &a3);
+  makeb8(&x1, &a1);
+  makeb8(&x2, &a2);
+  makeb8(&x3, &a3);
   X86_64DefSysCall3(ret, SysCallNR, (x1), (x2), (x3));
   return (int)ret;
 }
@@ -116,10 +116,10 @@ template <typename T1, typename T2, typename T3, typename T4>
 int DoSysCall(uint64_t SysCallNR, T1 a1, T2 a2, T3 a3, T4 a4) {
   uint64_t ret;
   b8 x1, x2, x3, x4;
-  makeb48(&x1, &a1);
-  makeb48(&x2, &a2);
-  makeb48(&x3, &a3);
-  makeb48(&x4, &a4);
+  makeb8(&x1, &a1);
+  makeb8(&x2, &a2);
+  makeb8(&x3, &a3);
+  makeb8(&x4, &a4);
   X86_64DefSysCall4(ret, SysCallNR, (x1), (x2), (x3), (x4));
   return (int)ret;
 }
@@ -128,11 +128,11 @@ template <typename T1, typename T2, typename T3, typename T4, typename T5>
 int DoSysCall(uint64_t SysCallNR, T1 a1, T2 a2, T3 a3, T4 a4, T5 a5) {
   uint64_t ret;
   b8 x1, x2, x3, x4, x5;
-  makeb48(&x1, &a1);
-  makeb48(&x2, &a2);
-  makeb48(&x3, &a3);
-  makeb48(&x4, &a4);
-  makeb48(&x5, &a5);
+  makeb8(&x1, &a1);
+  makeb8(&x2, &a2);
+  makeb8(&x3, &a3);
+  makeb8(&x4, &a4);
+  makeb8(&x5, &a5);
   X86_64DefSysCall5(ret, SysCallNR, (x1), (x2), (x3), (x4), (x5));
   return (int)ret;
 }
@@ -142,12 +142,12 @@ template <typename T1, typename T2, typename T3, typename T4, typename T5,
 int DoSysCall(uint64_t SysCallNR, T1 a1, T2 a2, T3 a3, T4 a4, T5 a5, T6 a6) {
   uint64_t ret;
   b8 x1, x2, x3, x4, x5, x6;
-  makeb48(&x1, &a1);
-  makeb48(&x2, &a2);
-  makeb48(&x3, &a3);
-  makeb48(&x4, &a4);
-  makeb48(&x5, &a5);
-  makeb48(&x6, &a6);
+  makeb8(&x1, &a1);
+  makeb8(&x2, &a2);
+  makeb8(&x3, &a3);
+  makeb8(&x4, &a4);
+  makeb8(&x5, &a5);
+  makeb8(&x6, &a6);
   X86_64DefSysCall6(ret, SysCallNR, (x1), (x2), (x3), (x4), (x5), (x6));
   return (int)ret;
 }

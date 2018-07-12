@@ -43,8 +43,8 @@ Quark
 
 TODO List
 -------------------------------
- - test for thread
- - logging module
+ - [x] test for thread
+ - [ ] logging module
 
 
 
@@ -55,3 +55,4 @@ Test Note
 |------|--------|---------------|
 | misc | 180625 | unit_test done|
 | thread/tid | 180710 | unit_test done|
+
