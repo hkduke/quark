@@ -5,8 +5,12 @@ include $(gRootConf)
 
 
 LDFlags  := $(CoreLDFlags)
-CXXFlags := $(CoreCXXFlags) -I$(RootInc) $(DebugFlag)
 
+#ifeq ($(HAVESMP),1)
+#	CXXFlags := $(CoreCXXFlags) -I$(RootInc) $(DebugFlag) -DHAVESMP
+#else
+CXXFlags := $(CoreCXXFlags) -I$(RootInc) $(DebugFlag)
+#endif
 
 srcs := $(wildcard *.cc)
 tgts := $(patsubst %.cc, %.o, $(srcs))

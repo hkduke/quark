@@ -44,7 +44,11 @@ Quark
 TODO List
 -------------------------------
  - [x] test for thread
+ - [x] atomic operation of cas/fad
+ - [ ] event frame work
  - [ ] logging module
+ -
+
 
 
 
@@ -55,4 +59,4 @@ Test Note
 |------|--------|---------------|
 | misc | 180625 | unit_test done|
 | thread/tid | 180710 | unit_test done|
-
+| atomic | 180718 | basic unit test done |

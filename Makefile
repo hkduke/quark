@@ -21,10 +21,20 @@ CF  := clang-format
 
 CorePath := $(gRootPath)/src
 CoreLibName := $(project_name)
-CoreCXXFlags := -std=c++11
+
+SMP := $(shell ./scripts/check_if_smp.sh)
+ifeq ($(SMP), 1)
+	CoreCXXFlags:=-std=c++11,-DHAVESMP
+	HAVESMP=-DHAVESMP
+else
+	CoreCXXFlags:=-std=c++11
+endif
+
+
 CoreLDFlags := -lpthread
 RootInc := $(gRootPath)/include
 Debug := "-DDEBUG"
+
 
 gConfInput-Static := $(gRootPath)/configs.static
 gRootConf := $(gRootPath)/$(project_name).config
@@ -39,6 +49,7 @@ help:
 	@echo "  code-format - to format the code as Google Style."
 
 env:
+	@echo "SMP: $(SMP)"
 	./scripts/make-env.sh $(gRootConf) $(gConfInput-Static) \
 		gRootPath=$(gRootPath) \
 		CC=$(CC) CXX=$(CXX) \
@@ -48,7 +59,7 @@ env:
 		CoreCXXFlags=$(CoreCXXFlags) \
 		RootInc=$(RootInc) \
 		AR=$(AR) RANLIB=$(RANLIB) \
-		USECoreLibLDFlags="-L$(CorePath),-l$(CoreLibName),$(Debug)" \
+		USECoreLibLDFlags="-L$(CorePath),-l$(CoreLibName),$(Debug),$(HAVESMP)" \
 		DebugFlag="$(Debug)"
 		
 quark: env

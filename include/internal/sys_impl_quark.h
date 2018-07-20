@@ -1,7 +1,6 @@
 #ifndef SYS_IMPL_QUARK_H
 #define SYS_IMPL_QUARK_H
 
-
 #include <sys_abs.h>
 
 #include <pthread.h>

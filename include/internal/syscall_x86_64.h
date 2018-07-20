@@ -1,6 +1,11 @@
 #ifndef SYSCALL_X86_64_H
 #define SYSCALL_X86_64_H
 
+#if !defined(SYS_IMPL_QUARK_H)
+#error "user should not include this file directly!"
+#endif
+
+
 #include <misc.h>
 
 DEF_NS_HEAD_QUARK

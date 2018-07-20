@@ -1,7 +1,7 @@
 #include <sys/syscall.h>
 #include <unistd.h>
 
-#include <internal/syscall_x86_64.h>
+#include <internal/sys_impl_quark.h>
 
 DEF_NS_HEAD_QUARK
 
