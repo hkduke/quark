@@ -45,6 +45,8 @@ TODO List
 -------------------------------
  - [x] test for thread
  - [x] atomic operation of cas/fad
+ - [ ] impl. sync routine by quark atomic operation
+ - [ ] add some lock-free datastructure
  - [ ] event frame work
  - [ ] logging module
  -
