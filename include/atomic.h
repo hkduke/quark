@@ -35,6 +35,17 @@ qk_atomic_t fetch_and_add(qk_atomic_t *var, int add);
  */
 bool compare_and_set(qk_atomic_t *var, qk_atomic_t oldval, qk_atomic_t newval);
 
+
+
+
+/*
+ * Memory Barrier. All instructions before this can be guaranteed performed 
+ * before those after this.
+ *
+ */
+inline void memory_barrier(); 
+
+
 #if defined(__linux__) && defined(__x86_64__)
 #include "./internal/atomic_x86_64.h"
 #else

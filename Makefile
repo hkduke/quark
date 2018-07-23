@@ -59,7 +59,7 @@ env:
 		CoreCXXFlags=$(CoreCXXFlags) \
 		RootInc=$(RootInc) \
 		AR=$(AR) RANLIB=$(RANLIB) \
-		USECoreLibLDFlags="-L$(CorePath),-l$(CoreLibName),$(Debug),$(HAVESMP)" \
+		USECoreLibLDFlags="-L$(CorePath),-l$(CoreLibName),$(Debug),$(HAVESMP),-Os" \
 		DebugFlag="$(Debug)"
 		
 quark: env

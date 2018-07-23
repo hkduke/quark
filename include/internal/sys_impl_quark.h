@@ -1,7 +1,7 @@
 #ifndef SYS_IMPL_QUARK_H
 #define SYS_IMPL_QUARK_H
 
-#include <sys_abs.h>
+#include <sys.h>
 
 #include <pthread.h>
 #include <unistd.h>
@@ -16,15 +16,23 @@ DEF_NS_HEAD_QUARK
 
 namespace os {
 using misc::uchar;
-struct RawByteBuffer {
-  uchar *b;
-  int sz;
-  RawByteBuffer(uchar *b_, int sz_) : b(b_), sz(sz_) {}
+
+struct RawBuffer {
+  uchar *b_;
+  int sz_;
+  int ref_;
+  RawBuffer(uchar *b, int sz) : b_(b), sz_(sz), ref_(-1) {}
+  
+
+  void put() { ref_--; }
+  uchar * get() { ref_++; return b_; }
 };
 
+RawBuffer* NewRawBuffer(int sz);
+
 /// - fsync or fdatasync
-class PosixWritableFile : public File<int, RawByteBuffer> {};
-class PosixReadableFile : public File<int, RawByteBuffer> {};
+class PosixWritableFile : public File<int, RawBuffer> {};
+class PosixReadableFile : public File<int, RawBuffer> {};
 
 /// NPTL Thread
 ///

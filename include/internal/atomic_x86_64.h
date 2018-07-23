@@ -41,4 +41,54 @@ bool compare_and_set(qk_atomic_t *var, qk_atomic_t oldval, qk_atomic_t newval) {
     return res == 1;
 }
 
+#ifdef defined(HAVESMP)
+#warning "memory_barrier with smp"
+// 
+// SMPLOCKPREFIX "addl $0,0(%%esp)\n\t"     lock xxxx instruction is expensive than *fence which X86_64 Arch already support.
+// 
+inline void memory_barrier() {
+    asm volatile(
+        "mfence"
+        :
+        :
+        : "memory"        
+    );
+}
+
+inline void rmb() {
+    asm volatile(
+        "lfence"
+        :
+        :
+        : "memory"        
+    );
+}
+
+inline void wmb() {
+    asm volatile(
+        "sfence"
+        :
+        :
+        : "memory"        
+    );
+}
+
+
+// mfence, lfence, sfence instructions only support on some particular arch.
+//
+//
+#else 
+inline void memory_barrier() {
+    asm volatile(
+        ""
+        :
+        :
+        : "memory"        
+    );
+}
+#endif
+
+#define rmb() memory_barrier()
+#define wmb() memory_barrier()
+
 #endif

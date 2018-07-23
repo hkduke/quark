@@ -1,7 +1,7 @@
 #ifndef QUARK_OS_ABS_H
 #define QUARK_OS_ABS_H
 /*
- * an abstraction layer of os operations.
+ * an abstraction layer of system regarding items.
  */
 
 #include <cerrno>
@@ -30,7 +30,7 @@ class Error {
 
 #define QuarkFatal(Msg, E)                    \
   do {                                        \
-    Error::Fatal(Msg, E, __FILE__, __LINE__); \
+    quark::os::Error::Fatal(Msg, E, __FILE__, __LINE__); \
   } while (0)
 
 /*
@@ -47,8 +47,8 @@ class directory {};
  */
 template <typename HT, typename BT,
           int PGSIZE = 4096>  /// Handler Type, Buffer Type
-class File {                  ///  RedFS File/Normal File
- public:
+class File {                  ///  RedFS File/Posix File
+ private:
   struct meta {
     HT handler_;
 
@@ -56,6 +56,7 @@ class File {                  ///  RedFS File/Normal File
     u64 ofs_;
     std::string filename_;
   };
+ public:
   File() {}
   virtual ~File() { Close(); }
 
@@ -74,7 +75,7 @@ class File {                  ///  RedFS File/Normal File
  protected:
   struct meta m_;
 
- protected:
+ public:
   inline void mput() { m_.ref_--; }
   inline File<HT, BT, PGSIZE> *mget() {
     m_.ref_++;
@@ -96,9 +97,11 @@ class Thread {
   } tag_detached;
   struct jthread {
     typedef tag_joinable detachstate;
+    virtual void WorkLoop (T*) = 0;
   };
   struct dthread {
     typedef tag_detached detachstate;
+    virtual void WorkLoop (T*) = 0;
   };
   enum { Stopped, Running, Blocked };
   struct ThreadHandler {  /// Thread Local Data
@@ -144,7 +147,6 @@ class Locker {
  * rcu, lock_guard, lock, load, acquire, atomic_*_t
  */
 class Sync {  /// lock-based sync
- public:
 };
 
 class CASSync {  /// cas-based sync

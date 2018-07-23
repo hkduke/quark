@@ -5,27 +5,30 @@
 DEF_NS_HEAD_QUARK
 namespace log {
 
+enum { debug, info, warn, error };
+const char * LogLvlStr [] = {
+    "[DBG]",
+    "[INF]",
+    "[WRN]",
+    "[ERR]",
+};
 /*
  * logger - a thread-safe, async-append logger which
  *  support rolling size, log level , async-append and thread-safe.
  *
  *  params:
  *      - roll_size     [50 MB]
- *      - level         [info ]   info, debug, error
+ *      - level         [info ]   debug, info, warn, error
  *
  * FIXME thread-safe
  */
-class logger {
- public:
-  enum { debug, warn, info, error };
-
- private:
+struct Config {
   int roll_size;
-  int default_level;
+  int log_level;
 
-  const char *dir_;
-  static FILE *fp_;
 };
+
+class Logger;
 
 }  // namespace log
 DEF_NS_TAIL_QUARK
